@@ -1,9 +1,12 @@
+import random
+
 import telebot
 from telebot import types
 import config
+import resourсes.stickers_and_text as res
 
 bot = telebot.TeleBot(config.TOKEN_BUTTONS)
-num = 0
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -11,8 +14,19 @@ def start(message):
     btn1 = types.KeyboardButton("Надо написать статью...")
     markup.add(btn1)
     bot.send_message(message.chat.id,
-                     text="Привет, {0.first_name}! Чем планируешь заняться?".format(
-                         message.from_user), reply_markup=markup)
+                     text="{0.first_name}, команда DeScienz тебя категорически приветствует!\n"
+                          "Больше информации по команде /help"
+                     .format(message.from_user))
+    bot.send_sticker(message.chat.id, res.get_rand_stic_id(res.hi_stics))
+    bot.send_message(message.chat.id,
+                     text="Чем планируешь заняться?"
+                     .format(message.from_user), reply_markup=markup)
+
+
+@bot.message_handler(commands=['help'])
+def start(message):
+    bot.send_message(message.chat.id,
+                     text=res.bot_info.format(message.from_user))
 
 
 def set_buttonz(btn1, btn2="", btn3=""):
@@ -42,6 +56,7 @@ def func(message):
         bot.send_message(message.chat.id,
                          text="И сколько будем прокрастинировать?",
                          reply_markup=set_buttonz("5 минут", "1 час", "Начну завтра)"))
+        bot.send_sticker(message.chat.id, res.get_rand_stic_id(res.thinking_stics))
 
     elif message.text == "5 минут" \
             or message.text == "1 час" \
@@ -57,6 +72,7 @@ def func(message):
 
     elif message.text == "Платные базы" or message.text == "Интернет":
         bot.send_message(message.chat.id, text="Несколько часов спустя...")
+        bot.send_sticker(message.chat.id, res.get_rand_stic_id(res.keep_it_up_stics))
         bot.send_message(message.chat.id,
                          text="Ты почти у цели!",
                          reply_markup=set_buttonz("Искать материалы", "Как же надоело!!1!"))
@@ -78,19 +94,24 @@ def func(message):
                               "супер-пупер "
                               "платформа!",
                          reply_markup=set_buttonz("Стать супер-пупер-учёным"))
+        bot.send_sticker(message.chat.id, res.get_rand_stic_id(res.love_it_stics))
 
     elif message.text == "Стать супер-пупер-учёным":
+
         bot.send_message(message.chat.id,
                          text="Ура! Теперь у тебя есть вся нужная информация "
                          "и ты пишешь статью, которую тут же публикуют!",
                          reply_markup=set_buttonz("Главное - не останавливаться на достигнутом"))
+        bot.send_sticker(message.chat.id, res.get_rand_stic_id(res.congrats_stics))
 
     elif message.text == "Главное - не останавливаться на достигнутом":
         bot.send_message(message.chat.id, text="Ты к успеху шел...")
         bot.send_message(message.chat.id, text="И дошел!")
         bot.send_message(message.chat.id,
-                         text="Поздравляем! Публикуйся и да публикуем будешь!",
+                         text="Публикуйся и да публикуем будешь!",
                          reply_markup=set_buttonz("Надо написать статью..."))
+        file = open(res.uchoniy_pic[random.randint(0, 1)], 'rb')
+        bot.send_photo(message.chat.id, file)
 
     else:
         bot.send_message(message.chat.id, text="Человек, я тебя не понимаю 🤨")
