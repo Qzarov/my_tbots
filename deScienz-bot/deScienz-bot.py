@@ -5,7 +5,7 @@ from telebot import types
 import config
 import resourсes.stickers_and_text as res
 
-bot = telebot.TeleBot(config.TOKEN_BUTTONS)
+bot = telebot.TeleBot(config.TOKEN_DESCIENZ)
 
 
 @bot.message_handler(commands=['start'])
@@ -15,11 +15,14 @@ def start(message):
     markup.add(btn1)
     bot.send_message(message.chat.id,
                      text="{0.first_name}, команда DeScienz тебя категорически приветствует!\n"
-                          "Больше информации по команде /help"
-                     .format(message.from_user))
+                          "Больше информации по команде /help".format(message.from_user))
     bot.send_sticker(message.chat.id, res.get_rand_stic_id(res.hi_stics))
     bot.send_message(message.chat.id,
                      text="Чем планируешь заняться?"
+                     .format(message.from_user), reply_markup=markup)
+
+    bot.send_message(config.my_id,
+                     text="{0.first_name} {0.last_name} (@{0.username}) пишет. Мне страшно..."
                      .format(message.from_user), reply_markup=markup)
 
 
@@ -92,7 +95,7 @@ def func(message):
         bot.send_message(message.chat.id,
                          text="Это "
                               "супер-пупер "
-                              "платформа!",
+                              "платформа для поиска научных статей!",
                          reply_markup=set_buttonz("Стать супер-пупер-учёным"))
         bot.send_sticker(message.chat.id, res.get_rand_stic_id(res.love_it_stics))
 
